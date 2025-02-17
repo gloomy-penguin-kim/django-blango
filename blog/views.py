@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers, vary_on_cookie
 
 from django.utils import timezone
 from blog.models import Post 
@@ -7,24 +9,6 @@ from blog.models import Post
 import logging 
 
 logger = logging.getLogger(__name__)
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        # "file": {"class": "logging.FileHandler",
-        #         "filename": "/var/log/blango.log"},
-        "console": {
-            "class": "logging.StreamHandler", 
-            "stream":"ext://sys.stdout"},
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "DEBUG",
-    }
-}
-
-
 
 def index(request):
     posts = Post.objects.filter(published_at__lte=timezone.now())
@@ -56,3 +40,16 @@ def post_detail(request, slug):
         request, "blog/post-detail.html", {"post": post, "comment_form": comment_form}
     )
 
+
+# # request. One major security flaw you could introduce is if you decided to
+# # # cache any page whose content depends on the logged-in user.
+@cache_page(300)
+#@vary_on_headers("Cookie") 
+@vary_on_cookie
+def index(request):
+    # existing view code
+    from django.http import HttpResponse
+    #return HttpResponse(str(request.user).encode("ascii"))
+    posts = Post.objects.filter(published_at__lte=timezone.now())
+    logger.debug("Got %d posts", len(posts))
+    return render(request, "blog/index.html", {"posts": posts})
