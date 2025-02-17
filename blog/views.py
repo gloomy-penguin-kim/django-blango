@@ -3,8 +3,28 @@ from django.shortcuts import render, get_object_or_404
 
 from django.utils import timezone
 from blog.models import Post 
+
 import logging 
+
 logger = logging.getLogger(__name__)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        # "file": {"class": "logging.FileHandler",
+        #         "filename": "/var/log/blango.log"},
+        "console": {
+            "class": "logging.StreamHandler", 
+            "stream":"ext://sys.stdout"},
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    }
+}
+
+
 
 def index(request):
     posts = Post.objects.filter(published_at__lte=timezone.now())

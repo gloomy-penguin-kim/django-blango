@@ -67,7 +67,6 @@ def endrow():
     return format_html("</div>")
 
 
-
 @register.simple_tag
 def col(extra_classes=""):
     return format_html('<div class="col {}">', extra_classes)
