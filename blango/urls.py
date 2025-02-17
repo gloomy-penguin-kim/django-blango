@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include 
 import blog.views
+import blango_auth.views
 
 from debug_toolbar.toolbar import debug_toolbar_urls
 
@@ -25,5 +26,8 @@ urlpatterns = [
     path("post/<slug:slug>/", blog.views.post_detail, name="blog-post-detail"),
 
     # path('admin/defender/', include('defender.urls')), 
+
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/profile/", blango_auth.views.profile, name="profile"),
     
 ]+ debug_toolbar_urls()

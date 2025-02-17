@@ -5,13 +5,25 @@ from django.views.decorators.vary import vary_on_headers, vary_on_cookie
 
 from django.utils import timezone
 from blog.models import Post 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
 
 import logging 
 
 logger = logging.getLogger(__name__)
 
+
+# The correct answers are:
+
+#     The defer method takes a list of strings for the columns that will not be returned.
+#     The only method takes a list of strings for the columns that will be returned.
+
+# These methods are used for fetching only some columns from the database. A QuerySet is a collection SQL queries. The explain method is used to explain queries without using the Django Debug Toolbar.
+
 def index(request):
     posts = Post.objects.filter(published_at__lte=timezone.now())
+    #posts = Post.objects.filter(published_at__lte=timezone.now()).select_related("author")
     return render(request, "blog/index.html", {"posts": posts})
 
 
@@ -53,3 +65,8 @@ def index(request):
     posts = Post.objects.filter(published_at__lte=timezone.now())
     logger.debug("Got %d posts", len(posts))
     return render(request, "blog/index.html", {"posts": posts})
+
+
+@login_required
+def profile(request):
+    return render(request, "profile.html")
