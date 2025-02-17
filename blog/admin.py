@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog.models import Tag, Post, Comment
+from blog.models import Tag, Post, Comment, AuthorProfile
 
 
 admin.site.register(Tag)
@@ -12,9 +12,6 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(Post, PostAdmin)
 
 
- 
-
-
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('content', 'content_object_str', 'content_type', 'creator')
 
@@ -24,3 +21,5 @@ class CommentAdmin(admin.ModelAdmin):
         return '-'
     
 admin.site.register(Comment, CommentAdmin)
+
+admin.site.register(AuthorProfile)

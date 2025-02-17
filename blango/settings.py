@@ -1,6 +1,6 @@
 from pathlib import Path
 from configurations import Configuration, values 
-
+from django.core.cache import caches 
 
 
 class Dev(Configuration):
@@ -21,6 +21,11 @@ class Dev(Configuration):
     #ALLOWED_HOSTS = []
     ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1'] 
 
+    INTERNAL_IPS = [
+        # ...
+        "127.0.0.1",
+        # ...
+    ]
     # Application definition
 
     INSTALLED_APPS = [
@@ -30,16 +35,24 @@ class Dev(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
+        
         'blog',
+        'blango_auth',
+
         'crispy_forms',
         'crispy_bootstrap5',
         'configurations',
 
         # https://django-defender.readthedocs.io/en/latest/
-        'defender',         
+        #'defender',         
+
+        # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+        "debug_toolbar",
     ]
     CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
     CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+    AUTH_USER_MODEL = 'blango_auth.User'
 
     MIDDLEWARE = [
         'django.middleware.security.SecurityMiddleware',
@@ -50,7 +63,9 @@ class Dev(Configuration):
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-        'defender.middleware.FailedLoginMiddleware',
+         #'defender.middleware.FailedLoginMiddleware',
+
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
 
     ROOT_URLCONF = 'blango.urls'
@@ -185,6 +200,9 @@ class Dev(Configuration):
         'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
         'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     ]
+
+    #CACHES = {}  
+    default_cache = caches["default"]
 
 
 import dj_database_url

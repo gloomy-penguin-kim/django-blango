@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path, include 
 import blog.views
 
+from debug_toolbar.toolbar import debug_toolbar_urls
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", blog.views.index),
     path("post/<slug:slug>/", blog.views.post_detail, name="blog-post-detail"),
 
-
-    path('admin/defender/', include('defender.urls')), 
-]
+    # path('admin/defender/', include('defender.urls')), 
+    
+]+ debug_toolbar_urls()
