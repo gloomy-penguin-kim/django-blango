@@ -29,5 +29,8 @@ urlpatterns = [
 
     path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/profile/", blango_auth.views.profile, name="profile"),
+
+    path("accounts/", include("allauth.urls")),
+
     
 ]+ debug_toolbar_urls()
